@@ -1,0 +1,30 @@
+From 6efb59c2710109a6280ae0e8655252c932fc6c94 Mon Sep 17 00:00:00 2001
+From: Alexandrov Stansilav <neko@nya.ai>
+Date: Sat, 1 Jul 2017 23:49:54 +0300
+Subject: [PATCH] Skip dependency check for INT33F5 during acpi scan
+
+Skip dependency check for battery for INT33F5 (dollar cove ti pmic)
+to properly initialize battery on HP x2 210 / HP x2 10-p000 devices
+
+Signed-off-by: Alexandrov Stansilav <neko@nya.ai>
+---
+ drivers/acpi/scan.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index d53162997f32..18692a3c7f6a 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1703,7 +1703,8 @@ static void acpi_device_dep_initialize(struct acpi_device *adev)
+ 		 * Management Controller
+ 		 */
+ 		skip = info->valid & ACPI_VALID_HID &&
+-			!strcmp(info->hardware_id.string, "INT3396");
++			(!strcmp(info->hardware_id.string, "INT3396") ||
++			!strcmp(info->hardware_id.string, "INT33F5"));
+ 
+ 		kfree(info);
+ 
+-- 
+2.13.0
+
